@@ -183,23 +183,23 @@ if(isset($_GET['id'])){
                          <h3 class="text-center service-text">Reviews and Rating</h3>
                          <?php
                                       
-                                      $sql = "SELECT * FROM review WHERE SCemail='$email'";
-                                      $result = $conn->query($sql);
-                                      if($result->num_rows>0){
-                                        while($row=$result->fetch_assoc()){
-                                          
-                                          ?>
-                                            <div class="row product-page-display  mt-3 mb-3">
-                                          <div class="media flex-column flex-md-row  comment">
-                                  <div class="media-body media-body-inset-1" >
-                                                <h6><?php echo $row['name']; ?></h6><span class="text-gray"></span>
-                                    <div class="blog-post-time">
-                                                  <time datetime="2018-04-24">Rating: <?php echo substr($row['rating'],0,3); ?>/5</time>
-                                    </div>
-                                      <p><?php echo $row['review']; ?></p>
-                                    </div>
-                                  </div>
-                                </div>
+                              $sql = "SELECT * FROM review WHERE SCemail='$email'";
+                              $result = $conn->query($sql);
+                              if($result->num_rows>0){
+                                while($row=$result->fetch_assoc()){
+                                  
+                                  ?>
+                                    <div class="row product-page-display  mt-3 mb-3">
+                                  <div class="media flex-column flex-md-row  comment">
+                          <div class="media-body media-body-inset-1" >
+                                        <h6><?php echo $row['name']; ?></h6><span class="text-gray"></span>
+                            <div class="blog-post-time">
+                                          <time datetime="2018-04-24">Rating: <?php echo substr($row['rating'],0,3); ?>/5</time>
+                            </div>
+                              <p><?php echo $row['review']; ?></p>
+                            </div>
+                          </div>
+                        </div>
                                     <?php }} ?>
                           <div class="row product-page-display justify-content-center mt-3 mb-3">
                             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="comment-form-area" method="POST">

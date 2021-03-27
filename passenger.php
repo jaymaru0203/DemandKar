@@ -8,15 +8,29 @@ if(!isset($_SESSION['email'])){
 $email = $_SESSION['email'];
 if(isset($_POST['getlatlong'])){
   if(isset($_POST['latitude']) && isset($_POST['longitude'])){
-    $_SESSION['userLat'] = $_POST['latitude'];
-    $latitude = $_SESSION['userLat'];
-    $_SESSION['userLong'] = $_POST['longitude'];
-    $longitude = $_SESSION['userLong'];
+    $latitude = $_POST['latitude'];
+    $longitude = $_POST['longitude'];
+
+    $searchQuery = $latitude.','.$longitude;
+
+    $buildQuery = http_build_query([
+      'access_key' => 'f3cf897892df57307c368f33bcb17d82',
+      'query' => $searchQuery
+    ]);
+    $ch = curl_init(sprintf('%s?%s', 'http://api.positionstack.com/v1/reverse', $buildQuery));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $result = json_decode($response, true);
+
+    $address = $result["data"]["0"]["label"];
     
     $sql = "SELECT * FROM position WHERE email='$email'";
     $result = $conn->query($sql);
     if($result->num_rows==0){
-      $sql1 = "INSERT INTO position (email, latitude, longitude) VALUES('$email', '$latitude', '$longitude')";
+      $sql1 = "INSERT INTO position (email, latitude, longitude , address) VALUES('$email', '$latitude', '$longitude', '$address')";
       if($conn->query($sql1) === TRUE){
         header('Location: productpage.php');
       }
@@ -25,7 +39,7 @@ if(isset($_POST['getlatlong'])){
       }      
     }
     else{
-      $sql1 = "UPDATE position SET latitude='$latitude', longitude='$longitude' WHERE email='$email'";
+      $sql1 = "UPDATE position SET latitude='$latitude', longitude='$longitude', address='$address' WHERE email='$email'";
       if($conn->query($sql1) === TRUE){
         header('Location: productpage.php');
       }
@@ -41,15 +55,29 @@ if(isset($_POST['getlatlong'])){
 
 if(isset($_POST['getlatlong1'])){
   if(isset($_POST['latitude']) && isset($_POST['longitude'])){
-    $_SESSION['userLat'] = $_POST['latitude'];
-    $latitude = $_SESSION['userLat'];
-    $_SESSION['userLong'] = $_POST['longitude'];
-    $longitude = $_SESSION['userLong'];
+    $latitude = $_POST['latitude'];
+    $longitude = $_POST['longitude'];
+
+    $searchQuery = $latitude.','.$longitude;
+
+    $buildQuery = http_build_query([
+      'access_key' => 'f3cf897892df57307c368f33bcb17d82',
+      'query' => $searchQuery
+    ]);
+    $ch = curl_init(sprintf('%s?%s', 'http://api.positionstack.com/v1/reverse', $buildQuery));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $result = json_decode($response, true);
+
+    $address = $result["data"]["0"]["label"];
     
     $sql = "SELECT * FROM position WHERE email='$email'";
     $result = $conn->query($sql);
     if($result->num_rows==0){
-      $sql1 = "INSERT INTO position (email, latitude, longitude) VALUES('$email', '$latitude', '$longitude')";
+      $sql1 = "INSERT INTO position (email, latitude, longitude, address) VALUES('$email', '$latitude', '$longitude', '$address')";
       if($conn->query($sql1) === TRUE){
         header('Location: servicepage.php');
       }
@@ -58,7 +86,7 @@ if(isset($_POST['getlatlong1'])){
       }      
     }
     else{
-      $sql1 = "UPDATE position SET latitude='$latitude', longitude='$longitude' WHERE email='$email'";
+      $sql1 = "UPDATE position SET latitude='$latitude', longitude='$longitude', address='$address' WHERE email='$email'";
       if($conn->query($sql1) === TRUE){
         header('Location: servicepage.php');
       }
@@ -142,7 +170,7 @@ if(isset($_POST['getlatlong1'])){
               </a>
 
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="#">My Profile</a>
+                <a class="dropdown-item" href="profilepage.php">My Profile</a>
                 <a class="dropdown-item" href="#">Order History</a>
                 <a class="dropdown-item" href="login.php">Logout</a>
               </div>

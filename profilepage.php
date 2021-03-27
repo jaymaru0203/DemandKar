@@ -1,3 +1,23 @@
+<?php
+
+require('config.php');
+if(!isset($_SESSION['email'])){
+  header('Location: login.php');
+  exit;
+}
+$name = $mobile = "";
+$email = $_SESSION['email'];
+$sql = "SELECT * FROM passenger WHERE email='$email'";
+$result = $conn->query($sql);
+if($result->num_rows>0){
+    while($row=$result->fetch_assoc()){
+        $name = $row['name'];
+        $mobile = $row['mobile'];
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +47,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 
-    <title>Profile Page</title>
+    <title><?php echo $name; ?></title>
 
 </head>
 <body>
@@ -62,9 +82,9 @@
               </a>
 
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="#">My Profile</a>
+              <a class="dropdown-item" href="profilepage.php">My Profile</a>
                 <a class="dropdown-item" href="#">Order History</a>
-                <a class="dropdown-item" href="#">Logout</a>
+                <a class="dropdown-item" href="login.php">Logout</a>
               </div>
             </div>      
             </div>
@@ -74,62 +94,70 @@
 
 
     <div class="container-fluid product-main-display">
+        <div class="col-xs-12 col-sm-12 col-md-12 p-3">
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 p-3">
+                <div class="col-xs-6 col-sm-6 col-md-6">
                <h3 class="mb-3 text-center">Profile</h3>
                        <div class="row product-page-display justify-content-center mt-3" >
                           
           
-            <form action="updateprofile.php" method="POST">
+            <form action="updateProfilePassenger.php" method="POST">
                
                     <div class="form-group">
                         <label for="fullName">Name</label>
-                        <input type="text" id="name" class="form-control" name="name" required/>
+                        <input type="text" id="name" class="form-control" name="name" value="<?php echo $name; ?>" required/>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label><br>
-                        <input type="email" id="name" class="form-control" name="email" required/>
+                        <input type="email" id="name" class="form-control" name="email" value="<?php echo $email; ?>" disabled required/>
                     </div>
                     <div class="form-group">
-                        <label for="contactNumber">Phone No.</label>
-                        <input type="text" class="form-control" id="contactNumber" name="contactNumber" required/>
+                        <label for="contactNumber">Mobile No.</label>
+                        <input type="text" class="form-control" id="mobile" name="mobile" value="<?php echo $mobile; ?>" required/>
                     </div>
                 <div class="text-center">
-                <button type="submit" class="btn buy-btn">Save Change</button>
+                <button type="submit" class="btn buy-btn" name="update">Update Profile</button>
                 </div>
                 </div>
                     
             </form>
-
-
-
-                          </div>
-
-
-
-                          <div class="row m-0 product-page-display justify-content-center mt-3 mb-3">
-                           <h3 class="text-center service-text">Reviews</h3>
-                            <div class="media flex-column flex-md-row  comment">
-                                  <div class="media-body media-body-inset-1">
-                                                <h6>Jack Wilson</h6><span class="text-gray"></span>
-                                    <div class="blog-post-time">
-                                                  <time datetime="2018-04-24">April 24, 2019 at 10:46 am</time>
-                                    </div>
-                                      <p>This game is amazing and anybody who is a Marvel fan will fall in love. They execute Kamala Khan's story beautifully (I am a big fan of her I been reading her comics for awhile), while also introducing an avengers team that is not only aged but divided making an interesting dynamic. </a></p>
-                                    </div>
-                          </div>
-                            
-                         </div>
-            </div>
-
         </div>
 
-
+        <div class="col-xs-6 col-sm-6 col-md-6">
+        <h3 class="text-center service-text">Reviews to Service Providers</h3>
+        <div class="row m-0 product-page-display justify-content-center mt-3 mb-3">
+            <div class="media flex-column comment">
+                <?php 
+            $sql = "SELECT * FROM review WHERE Pemail='$email'";
+            $result = $conn->query($sql);
+            if($result->num_rows>0){
+                while($row=$result->fetch_assoc()){        
+                    ?>
+                    <div class="media-body media-body-inset-1"><br>
+                        <?php
+                            $scEmail = $row['SCemail'];
+                            $sql2 = "SELECT * FROM serviceCenter WHERE email='$scEmail'";
+                            $result2 = $conn->query($sql2);
+                            if($result2->num_rows>0){
+                                while($row2=$result2->fetch_assoc()){
+                        ?>
+                                <h6><?php echo $row2['name']; ?></h6><span class="text-gray"></span><?php }} ?>
+                    <div class="blog-post-time">
+                        <time datetime="2018-04-24">Rating: <?php echo $row['rating']; ?>/5</time>
+                    </div>
+                        <p><?php echo $row['review']; ?></p>
+                    </div>
+                    <?php }}
+            else{
+                echo "<h3>No Reviews have been Added by You...</h3>";
+            } ?>
+            </div>   
+            </div>
+        </div>
+        </div>
+    </div>
     </div>
 
-
-
-</div>
 
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
