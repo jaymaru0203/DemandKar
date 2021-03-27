@@ -1,5 +1,9 @@
 <?php
 require('config.php');
+if(!isset($_SESSION['email'])){
+  header('Location: login.php');
+  exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -30,6 +34,8 @@ require('config.php');
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
     <title>Product Page</title>
 
@@ -76,14 +82,13 @@ require('config.php');
         </div>
     </nav>
 
-
     <div class="container-fluid product-main-display">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 p-3">
                         <div class="row">
-                            <form class="searchButton" action="#">
-                              <input type="text" placeholder="Search" name="search">
-                              <button type="submit"><i class="fa fa-search"></i></button>
+                            <form class="searchButton" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" id="searchForm" method="POST">
+                              <input type="text" placeholder="Search" name="search" id="search" autocomplete="off">
+                              <button type="submit" name="searchbtn"><i class="fa fa-search"></i></button>
                             </form>
 
                             <div class="dropdown filter">
@@ -105,6 +110,10 @@ require('config.php');
                                 if(isset($_GET['vehicle'])){
                                   $vehicle = $_GET['vehicle'];
                                   $sql = "SELECT * FROM product WHERE productVehicle='$vehicle'";
+                                }
+                                elseif(isset($_POST['searchbtn'])){
+                                  $search = $_POST['search'];
+                                  $sql = "SELECT * FROM product WHERE productName LIKE '%$search%'";
                                 }
                                 else{
                                   $sql = "SELECT * FROM product";
@@ -171,7 +180,7 @@ require('config.php');
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn buy-btn">Checkout</button>
+        <a href="checkout.php?id=<?php echo $row['id']; ?>"><button type="button" class="btn buy-btn">Checkout</button></a>
       </div>
     </div>
   </div>
@@ -267,10 +276,8 @@ require('config.php');
 
             });
 
-         
-  
-
    </script>
+
 
 </body>
 </html>

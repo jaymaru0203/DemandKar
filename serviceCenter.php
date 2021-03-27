@@ -4,6 +4,9 @@ if(!isset($_SESSION['email'])){
     header('Location: login.php');
     exit;
 }
+$sErr = "";
+$pErr = "";
+$hErr = "";
 $email = $_SESSION['email'];
 $sql = "SELECT * FROM serviceCenter WHERE email = '$email'";
 $result = $conn->query($sql);
@@ -31,10 +34,10 @@ if(isset($_POST['edit'])){
     }
     $edit = "UPDATE serviceCenter SET name='$nameEdit', mobile='$mobileEdit' WHERE email='$email'";
     if($conn->query($edit) === TRUE){
-
+        $hErr = "Profile Updated! Kindly Refresh the Page to see the Changes";
     }
     else{
-        echo "Profile Could Not be Updated!";
+        $hErr = "Profile Could Not be Updated!";
     }
 }
 
@@ -46,7 +49,7 @@ if(isset($_POST['addService'])){
 
     }
     else{
-        echo "Service Could not be Added!";
+        $sErr = "Service Could not be Added!";
     }
 }
 
@@ -60,33 +63,33 @@ $target_dir = "uploads/";
     if($check !== false) {
       $uploadOk = 1;
     } else {
-      echo "Product Image is not an image.<br>";
+      $pErr = "Product Image is not an image.<br>";
       $uploadOk = 0;
     }
 
     if (file_exists($target_file)) {
-      echo "Poster with the same name already exists.<br>";
+      $pErr = "Poster with the same name already exists.<br>";
       $uploadOk = 0;
     }
 
     if ($_FILES["productImage"]["size"] > 5242880) {
-      echo "Product Image cannot be more than 5 MB.<br>";
+      $pErr = "Product Image cannot be more than 5 MB.<br>";
       $uploadOk = 0;
     }
 
     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" ) {
-      echo "Only JPG, JPEG, PNG files are allowed.<br>";
+      $pErr = "Only JPG, JPEG, PNG files are allowed.<br>";
       $uploadOk = 0;
     }
 
     if ($uploadOk == 0) {
-      echo "Product Image was not Uploaded.<br>";
+      $pErr = "Product Image was not Uploaded.<br>";
     // if everything is ok, try to upload file
     } else {
       if (move_uploaded_file($_FILES["productImage"]["tmp_name"], $target_file)) {
         
       } else {
-        echo "Product Image was not Uploaded.<br>";
+        $pErr = "Product Image was not Uploaded.<br>";
       }
     }
 
@@ -105,11 +108,11 @@ $target_dir = "uploads/";
     if ($conn->query($sql) === TRUE) {
             
     } else {
-      echo "Error: " . $sql . "<br>" . $conn->error;
+      $pErr = "Error: " . $sql . "<br>" . $conn->error;
     }
   }
   else{
-      echo "***Product was not Added***";
+      $pErr = "Product was not Added";
   }
 }
 
@@ -316,6 +319,7 @@ $target_dir = "uploads/";
             border-collapse: collapse;
             border: 0.2px solid #666;
             padding: 10px;
+            text-align: center;
           }
           tr:nth-child(even){
             background-color: #fefefe;
@@ -363,7 +367,73 @@ $target_dir = "uploads/";
         }
         .button1:hover, .button1:focus { background: #e75d57; color: #fff; }
 
-        </style>
+        .error{
+            color: red;
+            text-align: center;
+            font-size: 16px;
+            padding: 20px;
+        }
+
+        .edBtn{
+            background: #0f046c;
+            color: #fff;
+        }
+
+        /* MODAL CSS */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.8);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        @keyframes example {
+            0%   {margin-top: -15%;}
+            100% {margin-top: 5%}
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 10px;
+            border: 1px solid #373435;
+            width: 50%;
+            border-radius: 15px;
+            animation: example 0.3s ease-out;
+        }
+
+        .close, .closeEdit, .closeDelete, .closeSal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: 900;
+            margin-right: 8px;
+        }
+
+        .close:hover, .close:focus, .closeEdit:hover, .closeEdit:focus, .closeDelete:hover, .closeDelete:focus, .closeSal:hover, .closeSal:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-label, .modal-input{
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        hr{
+            width: 85%;
+            border-bottom: 1px solid #0f046c;
+        }
+    </style>
 </head>
 <body>
 <div class="topnav"><a href="homepage.php">
@@ -376,7 +446,16 @@ $target_dir = "uploads/";
   <button class="tablinks" onclick="openCity(event, 'services')">Services</button>
   <button class="tablinks" onclick="openCity(event, 'products')">Products</button>
   <button class="tablinks" onclick="openCity(event, 'reviews')">Reviews</button>
-  <a href="login.php" style="all: unset; color: inherit;"><button class="tablinks" onclick="openTab(event, 'logout')">Logout</button></a>
+  <a href="login.php" style="all: unset; color: inherit;"><button class="tablinks" onclick="openTab(event, 'logout')">Logout</button></a><br><br><hr><br>
+  <span class="error">
+      <?php 
+      
+        echo $hErr;
+        echo $sErr;
+        echo $pErr;
+      
+      ?>
+  </span>
 </div>
 
 <div id="home" class="tabcontent">
@@ -439,7 +518,7 @@ $target_dir = "uploads/";
     <input type="text" name="email" id="email" placeholder="Email ID" value="<?php echo $email; ?>" disabled><br>
 
     <center>
-        <input type="submit" value="Edit Profile" name="edit" class="button" />
+        <input type="submit" value="Edit Profile" name="edit" class="button"/>
     </center>  
 </form> 
 
@@ -482,10 +561,52 @@ if ($result->num_rows > 0) {
     <td><?php echo $row['id']; ?></td>   
     <td><?php echo $row['serviceName']; ?></td>   
     <td><?php echo $row['servicePrice']; ?></td>   
-    <!-- <td><a href="deleteMovie.php?id=<?php echo $row['id']; ?>"><button style="padding: 5px;">Delete</button></a></td>  -->
-    <!-- ADD EDIT AND DELETE LOGIC HERE -->
-    <td></td>
-  </tr>	
+    <td><button style="padding: 5px;" class="edBtn" onclick="document.getElementById('<?php echo 'ee'.$row['id']; ?>').style.display='block'">Edit</button> <button style="padding: 5px;" class="edBtn" onclick="document.getElementById('<?php echo 'de'.$row['id']; ?>').style.display='block'">Delete</button></td> 
+</tr>
+
+                    <!-- Edit Modal -->
+                      <div id="<?php echo 'ee'.$row['id']; ?>" class="modal">
+                        <div class="modal-content">
+
+                          <span class="closeEdit" onclick="document.getElementById('<?php echo 'ee'.$row['id']; ?>').style.display='none'">&times;</span>
+
+                          <form action="editService.php?id=<?php echo $row['id']; ?>" method="POST" style="margin-bottom: 10px; margin-top: -30px; background:none;">
+                            <h3 class="heading">Edit Service</h3>
+                            <center><hr>
+
+                              <label for="serviceNameEdit" class="modal-label">Service Name: </label>
+                              <input type="text" name="serviceNameEdit" id="serviceNameEdit" class="modal-input" style="width: 60%; margin-bottom: 10px; margin-left: 10px;" value="<?php echo $row['serviceName']; ?>"><br><br>
+                              
+                              <label for="servicePriceEdit" class="modal-label">Service Price: </label>
+                              <input type="number" name="servicePriceEdit" id="servicePriceEdit" class="modal-input" style="width: 60%; margin-bottom: 10px; margin-left: 10px;" value="<?php echo $row['servicePrice']; ?>"><br><br>
+                              
+                              <input type="submit" value="Edit Service" name="editService" class="button">
+                              
+                            </center>
+                            </form>
+
+                        </div>
+                      </div>
+
+                      <!-- Delete Modal -->
+                      <div id="<?php echo 'de'.$row['id']; ?>" class="modal">
+                        <div class="modal-content">
+
+                          <span class="closeDelete" onclick="document.getElementById('<?php echo 'de'.$row['id']; ?>').style.display='none'">&times;</span>
+
+                          <form action="deleteService.php?id=<?php echo $row['id']; ?>" method="POST" style="margin-bottom: 10px;margin-top: -30px; background:none;">
+                            <h3 class="heading">Delete Service</h3>
+                            <center><hr>
+                              <label for="serviceNameDelete" class="modal-label">Service Name: </label>
+                              <input type="text" name="serviceNameDelete" id="serviceNameDelete" class="modal-input" style="width: 60%; margin-bottom: 10px; margin-left: 10px;" value="<?php echo $row['serviceName']; ?>" disabled><br><br>
+                              <label for="servicePriceDelete" class="modal-label">Service Price: </label>
+                              <input type="number" name="servicePriceDelete" id="servicePriceDelete" class="modal-input" style="width: 60%; margin-bottom: 10px; margin-left: 10px;" value="<?php echo $row['servicePrice']; ?>" disabled><br><br>
+                              <input type="submit" value="Delete Service" name="deleteService" class="button">
+                            </center>
+                            </form>
+
+                        </div>
+                      </div>
   
 <?php }
 } else {
@@ -560,10 +681,79 @@ if ($result->num_rows > 0) {
     <td><?php echo $row['productDescription']; ?></td>   
     <td><?php echo $row['productVehicle']; ?></td>   
     <td><?php echo $row['productPrice']; ?></td>   
-    <!-- <td><a href="deleteEvent.php?id=<?php echo $row['id']; ?>"><button style="padding: 5px;">Delete</button></a></td> -->
-    <!-- ADD EDIT AND DELETE BUTTONS -->
-    <td></td>
-  </tr>	
+    <td><button style="padding: 5px;" class="edBtn" onclick="document.getElementById('<?php echo 'pe'.$row['id']; ?>').style.display='block'">Edit</button> <button style="padding: 5px;" class="edBtn" onclick="document.getElementById('<?php echo 'pd'.$row['id']; ?>').style.display='block'">Delete</button></td> 
+</tr>
+
+                    <!-- Edit Modal -->
+                      <div id="<?php echo 'pe'.$row['id']; ?>" class="modal">
+                        <div class="modal-content">
+
+                          <span class="closeEdit" onclick="document.getElementById('<?php echo 'pe'.$row['id']; ?>').style.display='none'">&times;</span>
+
+                          <form action="editProduct.php?id=<?php echo $row['id']; ?>" method="POST" style="margin-bottom: 10px; margin-top: -30px; background:none;">
+                            <h3 class="heading">Edit Product</h3>
+                            <center><hr>
+
+                              <label for="productNameEdit" class="modal-label">Product Name: </label>
+                              <input type="text" name="productNameEdit" id="productNameEdit" class="modal-input" style="width: 60%; margin-bottom: 10px; margin-left: 10px;" value="<?php echo $row['productName']; ?>"><br><br>
+                              
+                              <label for="productDescriptionEdit" class="modal-label">Product Description: </label>
+                              <input type="text" name="productDescriptionEdit" id="productDescriptionEdit" class="modal-input" style="width: 60%; margin-bottom: 10px; margin-left: 10px;" value="<?php echo $row['productDescription']; ?>"><br><br>
+
+                              <select id="productVehicleEdit" name="productVehicleEdit" class="grid-item" required>
+                                  <?php $v = $row['productVehicle']; ?>
+                                <option value="Car" <?php if($v=="Car"){echo "selected";} ?> >Car</option>
+                                <option value="Truck" <?php if($v=="Truck"){echo "selected";} ?> >Truck</option>
+                                <option value="Bike" <?php if($v=="Bike"){echo "selected";} ?> >Bike</option>
+                                <option value="Others/NA" <?php if($v=="Others/NA"){echo "selected";} ?> >Others/NA</option>
+                              </select>
+
+                              <label for="productPriceEdit" class="modal-label">Product Price: </label>
+                              <input type="number" name="productPriceEdit" id="productPriceEdit" class="modal-input" style="width: 60%; margin-bottom: 10px; margin-left: 10px;" value="<?php echo $row['productPrice']; ?>"><br><br>
+                              
+                              <input type="submit" value="Edit Product" name="editProduct" class="button">
+                              
+                            </center>
+                            </form>
+
+                        </div>
+                      </div>
+
+                      <!-- Delete Modal -->
+                      <div id="<?php echo 'pd'.$row['id']; ?>" class="modal">
+                        <div class="modal-content">
+
+                          <span class="closeDelete" onclick="document.getElementById('<?php echo 'pd'.$row['id']; ?>').style.display='none'">&times;</span>
+
+                          <form action="deleteProduct.php?id=<?php echo $row['id']; ?>" method="POST" style="margin-bottom: 10px; margin-top: -30px; background:none;">
+                            <h3 class="heading">Delete Product</h3>
+                            <center><hr>
+
+                              <label for="productNameDelete" class="modal-label">Product Name: </label>
+                              <input type="text" name="productNameDelete" id="productNameDelete" class="modal-input" style="width: 60%; margin-bottom: 10px; margin-left: 10px;" value="<?php echo $row['productName']; ?>" disabled><br><br>
+                              
+                              <label for="productDescriptionDelete" class="modal-label">Product Description: </label>
+                              <input type="text" name="productDescriptionDelete" id="productDescriptionDelete" class="modal-input" style="width: 60%; margin-bottom: 10px; margin-left: 10px;" value="<?php echo $row['productDescription']; ?>" disabled><br><br>
+
+                              <select id="productVehicleDelete" name="productVehicleDelete" class="grid-item" required disabled>
+                                  <?php $v = $row['productVehicle']; ?>
+                                <option value="Car" <?php if($v=="Car"){echo "selected";} ?> >Car</option>
+                                <option value="Truck" <?php if($v=="Truck"){echo "selected";} ?> >Truck</option>
+                                <option value="Bike" <?php if($v=="Bike"){echo "selected";} ?> >Bike</option>
+                                <option value="Others/NA" <?php if($v=="Others/NA"){echo "selected";} ?> >Others/NA</option>
+                              </select>
+
+                              <label for="productPriceDelete" class="modal-label">Product Price: </label>
+                              <input type="number" name="productPriceDelete" id="productPriceDelete" class="modal-input" style="width: 60%; margin-bottom: 10px; margin-left: 10px;" value="<?php echo $row['productPrice']; ?>" disabled><br><br>
+                              
+                              <input type="submit" value="Delete Product" name="deleteProduct" class="button">
+                              
+                            </center>
+                            </form>
+
+
+                        </div>
+                      </div>	
   
 <?php }
 } else {
