@@ -1,3 +1,28 @@
+<?php
+require('config.php');
+if(!isset($_SESSION['email'])){
+  header('Location: login.php');
+  exit;
+}
+$name = $email = $mobile = "";
+if(isset($_GET['id'])){
+  $id = $_GET['id'];
+  $_SESSION['SCID'] = $id;
+}else{
+  $id = $_SESSION['SCID'];
+}
+  $sql = "SELECT * FROM serviceCenter WHERE id='$id'";
+  $result = $conn->query($sql);
+  if($result->num_rows == 1){
+    while($row=$result->fetch_assoc()){
+      $name = $row['name'];
+      $email = $row['email'];
+      $mobile = $row['mobile'];
+    }
+  }
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +52,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 
-    <title>Service Page</title>
+    <title><?php echo $name; ?></title>
 
 </head>
 <body>
@@ -64,7 +89,7 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href="#">My Profile</a>
                 <a class="dropdown-item" href="#">Order History</a>
-                <a class="dropdown-item" href="#">Logout</a>
+                <a class="dropdown-item" href="login.php">Logout</a>
               </div>
             </div>      
             </div>
@@ -82,19 +107,32 @@
                          <div class="col-lg-12 service-box">
                                 <div class="row m-0 justify-content-between">
                
-                                   <div class="service-title">Service Center Name: <span>Mahesh Mechanic</span></div>
-                                  <div class="service-title  ">Rating: <span> 4.5</span></div>
-                                   
+                                   <div class="service-title">Service Provider Name: <span><?php echo $name; ?></span></div>
+                                   <?php
+                                   $rating = "SELECT AVG(rating) AS ratingAverage FROM review WHERE SCemail='$email'";
+                                   $res = $conn->query($rating);
+                                   if($res->num_rows==1){
+                                     while($Rrow=$res->fetch_assoc()){
+                                  ?>
+                                  <div class="service-title  ">Rating: <span><?php echo substr($Rrow['ratingAverage'], 0, 3); ?></span></div>
+                                   <?php }} ?>
                                  </div>
                                  <div class="row m-0 justify-content-between">
-                                   <div class="service-title">No. of Services: <span>6</span></div>
+                                  
+                                  <?php $service = "SELECT COUNT(serviceName) AS noServices FROM services WHERE email='$email'";
+                                   $ser = $conn->query($service);
+                                   if($ser->num_rows==1){
+                                     while($Srow=$ser->fetch_assoc()){ ?>
+                                   <div class="service-title">No. of Services: <span><?php echo $Srow['noServices']; ?></span></div>
+                                   <?php }} ?>
+
                                      <div class="service-title ">Location: <span>2 km</span></div>
                                  </div>
                                   <div class="row m-0 justify-content-between">
                           
                                    
-                                  <div class="service-title">Contact Info: <span>9986265435</span></div>
-                                   <div class="service-title ">Email: <span>maru.jn@somaiya.edu</span></div>
+                                  <div class="service-title">Contact Info: <span><?php echo $mobile; ?></span></div>
+                                   <div class="service-title ">Email: <span><?php echo $email; ?></span></div>
                                   
                                  </div>
                                   </div>
@@ -108,69 +146,106 @@
                               <table class="table table-bordered">
                                 <thead>
                                   <tr>
-                                    <th scope="col" class="w-10">Sr. No</th>
+                                    <!-- <th scope="col" class="w-10">Sr. No</th> -->
                                     <th scope="col" class="w-40">Services Provided</th>
                                     <th scope="col" class="w-25">Cost</th>
                                     <th scope="col" class="w-25">Select Your Service</th>
                                   </tr>
                                 </thead>
+                              <form action="paymentpage.php" method="POST">
                                 <tbody>
+                                <?php 
+                                  $sql = "SELECT * FROM services WHERE email='$email'";
+                                  $result = $conn->query($sql);
+                                  if($result->num_rows > 0){
+                                    while($row=$result->fetch_assoc()){
+                                ?>
                                   <tr>
-                                    <td scope="row">1</td>
-                                    <td>Tire Puncture</td>
-                                    <td>Rs. 200</td>
+                                    <!-- <td scope="row">1</td> -->
+                                    <td><?php echo $row['serviceName']; ?></td>
+                                    <td><?php echo $row['servicePrice']; ?></td>
                                     <td class="checkbox">
-                                      <input type="checkbox" name="1">
+                                      <input type="checkbox" name="service[]" value="<?php echo $row['id']; ?>">
                                     </td>
                                   </tr>
-                                  <tr>
-                                   <td scope="row">1</td>
-                                    <td>Tire Puncture</td>
-                                    <td>Rs. 200</td>
-                                    <td class="checkbox">
-                                      <input type="checkbox" name="1">
-                                    </td>
-                                  </tr>
+                                  <?php }} ?>
+
                                 </tbody>
                               </table> 
-                               <div class="modal-btn text-center">
-                                    <a href="#" class="btn buy-btn" data-toggle="modal" data-target="#exampleModalCenter">Hire</a>
-                                    </div>
+                              <div class="modal-btn text-center">
+                                <button type="submit" name="hire" class="btn buy-btn">Hire Services</button>
+                              </div>
+                            </form>
 
-
-                            <!--   Other Services to be applied -->
                           </div>
                           
-                         </div>
-                          <div class="row product-page-display justify-content-center mt-3 mb-3">
-                           <h3 class="text-center service-text">Reviews and Rating</h3>
-                            <div class="media flex-column flex-md-row  comment">
-                                  <div class="media-body media-body-inset-1">
-                                                <h6>Jack Wilson</h6><span class="text-gray"></span>
+                         </div><br><br>
+                         <h3 class="text-center service-text">Reviews and Rating</h3>
+                         <?php
+                                      
+                                      $sql = "SELECT * FROM review WHERE SCemail='$email'";
+                                      $result = $conn->query($sql);
+                                      if($result->num_rows>0){
+                                        while($row=$result->fetch_assoc()){
+                                          
+                                          ?>
+                                            <div class="row product-page-display  mt-3 mb-3">
+                                          <div class="media flex-column flex-md-row  comment">
+                                  <div class="media-body media-body-inset-1" >
+                                                <h6><?php echo $row['name']; ?></h6><span class="text-gray"></span>
                                     <div class="blog-post-time">
-                                                  <time datetime="2018-04-24">April 24, 2019 at 10:46 am</time>
+                                                  <time datetime="2018-04-24">Rating: <?php echo substr($row['rating'],0,3); ?>/5</time>
                                     </div>
-                                      <p>This game is amazing and anybody who is a Marvel fan will fall in love. They execute Kamala Khan's story beautifully (I am a big fan of her I been reading her comics for awhile), while also introducing an avengers team that is not only aged but divided making an interesting dynamic. <span id="dots">...</span><span id="more">I particularly like the iconic mission line up for Bruce Banner/Hulk. Although short you can see/hear the character development going on with Bruce struggle to come to terms with the powers he hated for so long I love it. I have to admit there are some minor flaws. One being that sometimes the game can be a bit glitchy, and another being the lack of boss fights presented at the game launch.</span><a onclick="myFunction()" id="myBtn" style="color: blue;cursor: pointer;">Read more</a></p>
+                                      <p><?php echo $row['review']; ?></p>
                                     </div>
-                          </div>
-                            <form action="#" class="comment-form-area">
+                                  </div>
+                                </div>
+                                    <?php }} ?>
+                          <div class="row product-page-display justify-content-center mt-3 mb-3">
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="comment-form-area" method="POST">
                               <p class="comment-form-comment">
                                   <label>Your review *</label>
-                                  <textarea class="comment-notes" required="required"></textarea>
+                                  <textarea class="comment-notes" name="review" required="required"></textarea>
                               </p>
                                <div class="comment-input">
                                 <p class="comment-form-author">
                                     <label>Rating<span class="required">*</span></label>
-                                    <input type="number" required="required" name="rating" placeholder="1-5">
+                                    <input type="number" step="0.1" max="5" min="1" required="required" name="rating" placeholder="1-5">
                                 </p>
                                
                             </div>
-
-
                               <div class="comment-form-submit">
-                                  <input type="submit" value="Submit" class="comment-submit">
+                                  <input type="submit" value="Submit" name="reviewSubmit" class="comment-submit">
                               </div>
                           </form>
+
+                          <?php
+                          
+                              if(isset($_POST['reviewSubmit'])){
+                                $rating = $_POST['rating'];
+                                $review = $_POST['review'];
+                                $userEmail = $_SESSION['email'];
+                                $SCemail = $email;
+
+                                $sql1 = "SELECT * FROM passenger WHERE email='$userEmail'";
+                                $result1 = $conn->query($sql1);
+                                if($result1->num_rows > 0){
+                                  while($row1 = $result1->fetch_assoc()){
+                                    $userName = $row1['name'];
+                                  }
+                                }
+                                $sql2 = "INSERT INTO review (name, Pemail, rating, review, SCemail) VALUES ('$userName', '$userEmail', '$rating', '$review' ,'$SCemail')";
+                                if($conn->query($sql2) === TRUE){
+                                  header('Location: servicedetail.php');
+                                }
+                                else{
+                                  echo "Could Not Add Review";
+                                }
+
+                              }
+                          
+                          ?>
+                          </div>
                          </div>
             </div>
 

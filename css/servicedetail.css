@@ -45,7 +45,7 @@ button:focus{
 #loader img {
     display: block;
     width: 100%;
-    vertical-align: middle;
+    /* vertical-align: middle; */
 }
 
 .main-nav button{

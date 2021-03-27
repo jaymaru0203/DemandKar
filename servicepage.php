@@ -1,3 +1,11 @@
+<?php
+require('config.php');
+if(!isset($_SESSION['email'])){
+  header('Location: login.php');
+  exit;
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 
-    <title>Service Page</title>
+    <title>Service Providers</title>
 
 </head>
 <body>
@@ -78,7 +86,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12 p-3">
                         <div class="row">
                             <form class="searchButton" action="#">
-                              <input type="text" placeholder="Search" name="search">
+                              <input type="text" placeholder="Search" name="search" autocomplete="off">
                               <button type="submit"><i class="fa fa-search"></i></button>
                             </form>
 
@@ -87,32 +95,62 @@
                                 Sort By
                               </button>
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Rating</a>
-                                <a class="dropdown-item" href="#">Nearest Location</a>
+                                <a class="dropdown-item" href="servicepage.php?sort=rating">Rating</a>
+                                <a class="dropdown-item" href="servicepage.php?sort=location">Nearest Location</a>
+                                <a class="dropdown-item" href="servicepage.php?sort=responseTime">Response Time</a>
                               </div>
                             </div>
                         </div>
+
+                      <?php
+                      if(isset($_GET['sort'])){
+                      if($_GET['sort']=="rating"){
+
+                      }
+                      elseif($_GET['sort']=="location"){
+
+                      }
+                      elseif($_GET['sort']=="responseTime"){
+
+                      }
+                    }
+                      else{
+                        $sql = "SELECT * FROM serviceCenter";
+                      }
+                      $result = $conn->query($sql);
+                      if($result->num_rows>0){
+                        while($row=$result->fetch_assoc()){
+                      
+                      ?>
                         <div class="row  product-page-display justify-content-center mt-3" >
                                <div class="col-lg-12 service-box">
                                 <div class="row">
                                  <div class="col-lg-9 col-md-9 col-sm-8 col-xs-6">
-                                   <div class="service-title">Service Center Name: <span>Mahesh Mechanic</span></div>
-                                   <div class="service-title">No. of Services: <span>6</span></div>
+                                   <div class="service-title">Service Provider: <span><?php echo $row['name']; ?></span></div>
+                                   <div class="service-title">Response Time: <span>6</span></div>
                                  </div>
+                                 <?php 
+                                  $email = $row['email'];
+                                  $rating = "SELECT AVG(rating) AS ratingAverage FROM review WHERE SCemail='$email'";
+                                  $res = $conn->query($rating);
+                                  if($res->num_rows==1){
+                                    while($Rrow=$res->fetch_assoc()){
+                                 ?>
                                  <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
-                                   <div class="service-title  ">Rating: <span> 4.5</span></div>
-                                    <div class="service-title ">Location: <span>2 km</span></div>
-                                  
+                                   <div class="service-title ">Rating: <span><?php echo substr($Rrow['ratingAverage'], 0,3); ?></span></div>
+                                   <?php }} ?>
+                                    <div class="service-title ">Location: <span>2 km</span></div>                                  
                                  </div>
-                                  
                                 </div>
                                 <div class="modal-btn">
-                                    <a href="#" class="btn buy-btn" data-toggle="modal" data-target="#exampleModalCenter">Buy Now</a>
+                                    <a href="servicedetail.php?id=<?php echo $row['id']; ?>" class="btn buy-btn">Buy Now</a>
                                     </div>
                                </div>    
-                
                          </div>
-
+                      <?php 
+                          }
+                        }
+                      ?>
 
             </div>
 

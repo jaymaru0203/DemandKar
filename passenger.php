@@ -32,7 +32,7 @@
     <title>Home Page</title>
 
 </head>
-<body>
+<body onload="getLocation()">
 
 <div id="wrapper">
   
@@ -148,6 +148,20 @@
    });
 
    </script>
+
+<script>
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(showPosition);
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}
+function showPosition(position) {
+  alert("Latitude: " + position.coords.latitude +
+  "<br>Longitude: " + position.coords.longitude);
+}
+</script>
 
 </body>
 </html>
