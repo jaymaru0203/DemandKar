@@ -127,7 +127,7 @@ require('config.php');
                                     </div>
 
                                     <div class="modal-btn">
-                                    <a href="#<?php echo $row['id']; ?>" class="btn buy-btn" data-toggle="modal" data-target="#<?php echo $row['id']; ?>">Buy Now</a>
+                                    <a href="#<?php echo $row['id']; ?>" class="btn buy-btn" data-toggle="modal" data-target="#modal<?php echo $row['id']; ?>">Buy Now</a>
                                     </div>
                                   </div>
                                </div>
@@ -155,7 +155,7 @@ require('config.php');
         while($row=$result->fetch_assoc()){
           ?>
 <!-- Modal -->
-<div class="modal fade" id="<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modal<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
