@@ -1,3 +1,81 @@
+<?php
+
+require('config.php');
+if(!isset($_SESSION['email'])){
+  header('Location: login.php');
+  exit;
+}
+$email = $_SESSION['email'];
+if(isset($_POST['getlatlong'])){
+  if(isset($_POST['latitude']) && isset($_POST['longitude'])){
+    $_SESSION['userLat'] = $_POST['latitude'];
+    $latitude = $_SESSION['userLat'];
+    $_SESSION['userLong'] = $_POST['longitude'];
+    $longitude = $_SESSION['userLong'];
+    
+    $sql = "SELECT * FROM position WHERE email='$email'";
+    $result = $conn->query($sql);
+    if($result->num_rows==0){
+      $sql1 = "INSERT INTO position (email, latitude, longitude) VALUES('$email', '$latitude', '$longitude')";
+      if($conn->query($sql1) === TRUE){
+        header('Location: productpage.php');
+      }
+      else{
+        echo "Kindly Allow Location Tracking to See Relevant Results";
+      }      
+    }
+    else{
+      $sql1 = "UPDATE position SET latitude='$latitude', longitude='$longitude' WHERE email='$email'";
+      if($conn->query($sql1) === TRUE){
+        header('Location: productpage.php');
+      }
+      else{
+        echo "Kindly Allow Location Tracking to See Relevant Results";
+      } 
+    }
+  }
+  else{
+    echo "Kindly Allow Location Tracking to See Relevant Results";
+  }
+}
+
+if(isset($_POST['getlatlong1'])){
+  if(isset($_POST['latitude']) && isset($_POST['longitude'])){
+    $_SESSION['userLat'] = $_POST['latitude'];
+    $latitude = $_SESSION['userLat'];
+    $_SESSION['userLong'] = $_POST['longitude'];
+    $longitude = $_SESSION['userLong'];
+    
+    $sql = "SELECT * FROM position WHERE email='$email'";
+    $result = $conn->query($sql);
+    if($result->num_rows==0){
+      $sql1 = "INSERT INTO position (email, latitude, longitude) VALUES('$email', '$latitude', '$longitude')";
+      if($conn->query($sql1) === TRUE){
+        header('Location: servicepage.php');
+      }
+      else{
+        echo "Kindly Allow Location Tracking to See Relevant Results";
+      }      
+    }
+    else{
+      $sql1 = "UPDATE position SET latitude='$latitude', longitude='$longitude' WHERE email='$email'";
+      if($conn->query($sql1) === TRUE){
+        header('Location: servicepage.php');
+      }
+      else{
+        echo "Kindly Allow Location Tracking to See Relevant Results";
+      } 
+    }
+  }
+  else{
+    echo "Kindly Allow Location Tracking to See Relevant Results";
+  }
+}
+
+?>
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,8 +160,11 @@
       <div class="main-text">The Auto Mechanic That Comes To You</div>
       <div class="sub-text">The Mechanic will come to you for providing Service in your location. Choose your service and hire mechanic. Pay the mechanic online or cash on delivery as per your need.</div>
       <div class="link-button">
-        
-          <button class="hire-mech">Hire Mechanic</button>
+      <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="post">
+          <input type="number" name="latitude" id="latitude1" value="" hidden step="0.0000001">
+          <input type="number" name="longitude" id="longitude1" value="" hidden step="0.0000001">
+          <button type="submit" name="getlatlong1" class="hire-mech">Hire</button>
+        </form>
           
         </div>
        </div>
@@ -106,8 +187,11 @@
       <div class="main-text">Buy Mechanical Products Near You</div>
       <div class="sub-text">Find best product near by service center. Choose your product and get in best prices. </div>
       <div class="link-button">
-        
-        <a href="productpage.php"><button class="hire-mech">Product</button></a>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="post">
+          <input type="number" name="latitude" id="latitude" value="" hidden step="0.0000001">
+          <input type="number" name="longitude" id="longitude" value="" hidden step="0.0000001">
+          <button type="submit" name="getlatlong" class="hire-mech">Product</button>
+        </form>
           
         </div>
        </div>
@@ -158,8 +242,10 @@ function getLocation() {
   }
 }
 function showPosition(position) {
-  alert("Latitude: " + position.coords.latitude +
-  "<br>Longitude: " + position.coords.longitude);
+  document.getElementById('latitude').value = position.coords.latitude;
+  document.getElementById('latitude1').value = position.coords.latitude;
+  document.getElementById('longitude').value = position.coords.longitude;
+  document.getElementById('longitude1').value = position.coords.longitude;
 }
 </script>
 

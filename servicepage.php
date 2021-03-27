@@ -4,6 +4,11 @@ if(!isset($_SESSION['email'])){
   header('Location: login.php');
   exit;
 }
+
+if(isset($_POST['latitude']) && isset($_POST['longitude'])){
+  $_SESSION['userLat'] = $_POST['latitude'];
+  $_SESSION['userLong'] = $_POST['longitude'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -150,6 +155,10 @@ if(!isset($_SESSION['email'])){
                       <?php 
                           }
                         }
+                      else{
+                          echo "<center><h3>Oops..No Service Provider Available around! But You can Help Your Own Self!</h3> <h4>Head to our Vehicle Servicing Video Tutorials!</h4>";
+                          echo "<a href='https://youtube.com/playlist?list=PLU2Rvz_IU_zRnwPSuL_IiBRGBLWnjdkNk'>Tutorials</a></center>";
+                      }
                       ?>
 
             </div>
