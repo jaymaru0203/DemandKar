@@ -1,5 +1,6 @@
 <?php
 require('config.php');
+unset($_SESSION['email']);
 $error = array("common"=>"", "email"=>"", "pass"=>"");
 $er=0;
   if(isset($_POST['signin'])){

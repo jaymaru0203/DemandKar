@@ -1,6 +1,7 @@
 <?php
 
 require('config.php');
+unset($_SESSION['email']);
 $error = array("common"=>"", "name"=>"", "email"=>"", "mobile"=>"", "pass"=>"", "userType"=>"");
 $er=0;
   if(isset($_POST['signup'])){
