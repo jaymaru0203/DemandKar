@@ -18,29 +18,6 @@ if($result->num_rows==1){
     }
 }
 
-
-if(isset($_POST['edit'])){
-    if(isset($_POST['name'])){
-        $nameEdit = $_POST['name'];
-    }
-    else{
-        $nameEdit = $name;
-    }
-    if(isset($_POST['mobile'])){
-        $mobileEdit = $_POST['mobile'];
-    }
-    else{
-        $mobileEdit = $mobile;
-    }
-    $edit = "UPDATE serviceCenter SET name='$nameEdit', mobile='$mobileEdit' WHERE email='$email'";
-    if($conn->query($edit) === TRUE){
-        $hErr = "Profile Updated! Kindly Refresh the Page to see the Changes";
-    }
-    else{
-        $hErr = "Profile Could Not be Updated!";
-    }
-}
-
 if(isset($_POST['addService'])){
     $serviceName = $_POST['serviceName'];
     $servicePrice = $_POST['servicePrice'];
@@ -123,7 +100,7 @@ $target_dir = "uploads/";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Center</title>
+    <title>Service Provider</title>
     <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
 
     <style>
@@ -466,7 +443,7 @@ $target_dir = "uploads/";
   <div class="cards">Products<br>
   <b class="statText">
   <?php
-  $sql1 = "SELECT * FROM product WHERE email='$email'"; //ADD PRODUCT TABLE
+  $sql1 = "SELECT * FROM product WHERE email='$email'";
   $result = $conn->query($sql1); 
   echo $result->num_rows; 
   ?>
@@ -475,7 +452,7 @@ $target_dir = "uploads/";
   <div class="cards">Services<br>
   <b class="statText">
   <?php
-  $sql2 = "SELECT * FROM services WHERE email='$email'"; //ADD SERVICE TABLE
+  $sql2 = "SELECT * FROM services WHERE email='$email'";
   $result = $conn->query($sql2); 
   echo $result->num_rows; 
   ?>
@@ -493,7 +470,7 @@ $target_dir = "uploads/";
   <div class="cards">Rating<br>
   <b class="statText">
   <?php
-    $sql3 = "SELECT AVG(rating) AS ratingAverage FROM review WHERE SCemail='$email'"; //ADD TRANSACTION TABLE
+    $sql3 = "SELECT AVG(rating) AS ratingAverage FROM review WHERE SCemail='$email'";
     $result = $conn->query($sql3); 
     if($result->num_rows>0){
         while($row=$result->fetch_assoc()){
@@ -505,7 +482,7 @@ $target_dir = "uploads/";
   </div>
 </div>
 </div>
-<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST"  enctype="multipart/form-data">
+<form action="editProfile.php" method="POST"  enctype="multipart/form-data">
   <h2>Edit Profile</h2>
 
     <label for="name">Name</label>

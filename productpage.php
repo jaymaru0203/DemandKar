@@ -64,7 +64,7 @@ if(!isset($_SESSION['email'])){
         <div class="collapse navbar-collapse" id="navbarCollapse">
 
             <div class="navbar-nav ml-auto">
-                <a href="index.html" class="nav-item nav-link">Hire Mechanic</a>
+                <a href="servicepage.php" class="nav-item nav-link">Hire Mechanic</a>
                 <a href="productpage.php" class="nav-item nav-link active">Buy Product</a>
              <div class="dropdown show">
               <a class="nav-item nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -74,7 +74,7 @@ if(!isset($_SESSION['email'])){
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href="#">My Profile</a>
                 <a class="dropdown-item" href="#">Order History</a>
-                <a class="dropdown-item" href="#">Logout</a>
+                <a class="dropdown-item" href="login.php">Logout</a>
               </div>
             </div>      
             </div>

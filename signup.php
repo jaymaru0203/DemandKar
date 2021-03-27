@@ -330,7 +330,7 @@ $er=0;
                     <input class="form-check-input" type="radio" name="userType" id="flexRadioDefault1" value="serviceCenter">
                     <label for="remember" class="form-check-label radioname" 
 
-                    >Service Center</label>
+                    >Service Provider</label>
                   </div>
                   <span class="error"><?php echo $error['userType']; ?></span>
                 </div>
