@@ -4,11 +4,6 @@ if(!isset($_SESSION['email'])){
   header('Location: login.php');
   exit;
 }
-
-if(isset($_POST['latitude']) && isset($_POST['longitude'])){
-  $_SESSION['userLat'] = $_POST['latitude'];
-  $_SESSION['userLong'] = $_POST['longitude'];
-}
 ?>
 
 <!DOCTYPE html>
@@ -75,7 +70,7 @@ if(isset($_POST['latitude']) && isset($_POST['longitude'])){
               </a>
 
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="#">My Profile</a>
+                <a class="dropdown-item" href="rofilepage.php">My Profile</a>
                 <a class="dropdown-item" href="#">Order History</a>
                 <a class="dropdown-item" href="login.php">Logout</a>
               </div>
@@ -90,10 +85,10 @@ if(isset($_POST['latitude']) && isset($_POST['longitude'])){
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 p-3">
                         <div class="row">
-                            <form class="searchButton" action="#">
-                              <input type="text" placeholder="Search" name="search" autocomplete="off">
-                              <button type="submit"><i class="fa fa-search"></i></button>
-                            </form>
+                        <form class="searchButton" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" id="searchForm" method="POST">
+                          <input type="text" placeholder="Search" name="search" id="search" autocomplete="off">
+                          <button type="submit" name="searchbtn"><i class="fa fa-search"></i></button>
+                        </form>
 
                              <div class="dropdown filter">
                               <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -108,17 +103,23 @@ if(isset($_POST['latitude']) && isset($_POST['longitude'])){
                         </div>
 
                       <?php
+                      $sort = "";
                       if(isset($_GET['sort'])){
-                      if($_GET['sort']=="rating"){
+                        $sort = $_GET['sort'];
+                      }
+                      if($sort=="rating"){
 
                       }
-                      elseif($_GET['sort']=="location"){
+                      elseif($sort=="location"){
 
                       }
-                      elseif($_GET['sort']=="responseTime"){
+                      elseif($sort=="responseTime"){
 
                       }
-                    }
+                      elseif(isset($_POST['searchbtn'])){
+                        $search = $_POST['search'];
+                        $sql = "SELECT * FROM serviceCenter WHERE name LIKE '%$search%'";
+                      }
                       else{
                         $sql = "SELECT * FROM serviceCenter";
                       }

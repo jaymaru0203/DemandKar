@@ -4,10 +4,6 @@ if(!isset($_SESSION['email'])){
   header('Location: login.php');
   exit;
 }
-if(isset($_POST['latitude']) && isset($_POST['longitude'])){
-  $_SESSION['userLat'] = $_POST['latitude'];
-  $_SESSION['userLong'] = $_POST['longitude'];
-}
 ?>
 
 <!DOCTYPE html>
@@ -76,7 +72,7 @@ if(isset($_POST['latitude']) && isset($_POST['longitude'])){
               </a>
 
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="#">My Profile</a>
+                <a class="dropdown-item" href="profilepage.php">My Profile</a>
                 <a class="dropdown-item" href="#">Order History</a>
                 <a class="dropdown-item" href="login.php">Logout</a>
               </div>
@@ -184,7 +180,7 @@ if(isset($_POST['latitude']) && isset($_POST['longitude'])){
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <a href="checkout.php?id=<?php echo $row['id']; ?>"><button type="button" class="btn buy-btn">Checkout</button></a>
+        <a href="paymentpage.php?price=<?php echo $row['productPrice']; ?>"><button type="button" class="btn buy-btn">Checkout</button></a>
       </div>
     </div>
   </div>

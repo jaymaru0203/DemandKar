@@ -2,7 +2,7 @@
 
 <?php
 
-$searchQuery = '19.0000000,72.89820200';
+$searchQuery = '19.07047950,72.89820200';
 
 $buildQuery = http_build_query([
   'access_key' => 'f3cf897892df57307c368f33bcb17d82',
@@ -16,6 +16,6 @@ curl_close($ch);
 
 $result = json_decode($response, true);
 
-var_dump($result);
+echo $result["data"]["0"]["label"];
 
 ?>
