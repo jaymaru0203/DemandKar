@@ -102,6 +102,7 @@ $target_dir = "uploads/";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service Provider</title>
     <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
     <style>
         * {
@@ -128,7 +129,7 @@ $target_dir = "uploads/";
             height: 4vh;
             margin: 1vh 1vw;
         }
-        #profile{
+        .profile{
             float: right;
             margin: 2vh 3vw;
             font-size: 2vh;
@@ -139,6 +140,7 @@ $target_dir = "uploads/";
           float: left;
           background-color: #fff;
           width: 20%;
+          min-width: 160px;
           height: 94vh;
           padding-top: 5vh;
           position: fixed;
@@ -181,11 +183,90 @@ $target_dir = "uploads/";
           background-color: #e75d570d;
           color: #e75d57;
         }
+
+        /*Transaction*/
         
+
+        .order-box{
+          width: 320px;
+          padding: 18px;
+          border-radius: 8px ; 
+          margin: 0px 15px;
+          border: 1px solid #ccc;
+        }
+
+        h5.card-title{
+          font-size: 18px;
+          font-weight: bold;
+          margin: 14px 0px;
+          color: #444;
+        }
+
+        .arrival-form{
+            margin: 0;
+            padding: 0;
+        }
+
+        .arrival-form input{
+          margin: 5px 0px;
+          padding: 5px 10px;
+          height: 40px;
+          font-size: 15px;
+        }
+        
+        h5.card-title span{
+          margin: 0 3px;
+        }
+        .status-btn {
+    justify-content: space-between;
+    display: flex;
+    margin: 10px 0px 0px;
+}
+
+        .accept{
+            border: 0;
+            outline: none;
+            padding: 8px 2px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 3px solid #e75d57;
+            border-radius: 7px;
+            color: #fff;
+            background: #e75d57;
+            cursor: pointer;
+            -moz-transition: all 0.4s ease-in-out;
+            -o-transition: all 0.4s ease-in-out;
+            -webkit-transition: all 0.4s ease-in-out;
+            transition: all 0.4s ease-in-out;
+            width: 100px;
+            
+        }
+        .reject{
+            border: 0;
+            outline: none;
+            padding: 8px 2px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 3px solid #e75d57;
+            border-radius: 7px;
+            color: #e75d57;
+            background: #fff;
+            cursor: pointer;
+            -moz-transition: all 0.4s ease-in-out;
+            -o-transition: all 0.4s ease-in-out;
+            -webkit-transition: all 0.4s ease-in-out;
+            transition: all 0.4s ease-in-out;
+            width: 100px;
+            
+
+        }
         /* Style the tab content */
         .tabcontent {
           float: right;
-
           width: 73%;
           min-height: 80vh;
           background-color: #fff;
@@ -413,15 +494,18 @@ $target_dir = "uploads/";
     </style>
 </head>
 <body>
-<div class="topnav"><a href="homepage.php">
-    <img src="images/logo.png" id="logo"></a>
-    <div id="profile"><?php  echo $_SESSION['email'] ?></div>
+<div class="topnav">
+  <a href="homepage.php"><img src="images/logo.png" id="logo"></a>
+   
+     <div class="profile" ><?php  echo $_SESSION['email'] ?></div>
+     <div class="profile" onclick="sidebar()"><i class="fa fa-bars" aria-hidden="true"></i></div>
 </div>
 <div class="tab">
     <h2><?php echo $name; ?></h2>
   <button class="tablinks" onclick="openCity(event, 'home')" id="defaultOpen">Home</button>
   <button class="tablinks" onclick="openCity(event, 'services')">Services</button>
   <button class="tablinks" onclick="openCity(event, 'products')">Products</button>
+  <button class="tablinks" onclick="openCity(event, 'transactions')">Transactions</button>
   <button class="tablinks" onclick="openCity(event, 'reviews')">Reviews</button>
   <a href="login.php" style="all: unset; color: inherit;"><button class="tablinks" onclick="openTab(event, 'logout')">Logout</button></a><br><br><hr><br>
   <span class="error">
@@ -593,6 +677,32 @@ if ($result->num_rows > 0) {
 </table>
 
 </div>
+</div>
+
+<div id="transactions" class="tabcontent">
+  <h2 class="order-title">Transaction Details</h2>
+  <div class="order-box">
+      <h5 class="card-title">Name: <span>Ramesh Mech</span></h5>
+      <h5 class="card-title">Email: <span>maru.jn@somaiya.edu</span></h5>
+      <h5 class="card-title">Mobile No:<span>9594233997</span></h5>
+      <h5 class="card-title">Address: <span>F/15, Yashwant Society, Kisan Nagar 1, Thane.</span></h5>
+      <h5 class="card-title">Distance: <span>2 km</span></h5>
+      <h5 class="card-title">Service Chosen: <li>Tire Puncture</li></h5>
+      <form class="arrival-form">
+        <div class="arrival">
+         <label>Time to Arrive: </label><br> 
+        <input type="text" name="arrivalTime">
+        </div>
+      </form>
+
+     <div class="status-btn">
+      <button class="reject">Reject</button>
+      <button class="accept">Accept</button>
+      
+    </div>
+      
+    </div>
+  </div>
 </div>
 
 <div id="products" class="tabcontent">
@@ -781,6 +891,24 @@ if ($result->num_rows > 0) {
 </div>
 
 <script>
+   function sidebar(){
+    var sidebars = document.getElementsByClassName("tab")[0];
+    var maincontent = document.getElementsByClassName("tabcontent");
+    if (sidebars.style.margin >=0){
+    sidebars.style.margin = "-290px";
+    
+     for (i = 0; i < maincontent.length; i++) {
+        maincontent[i].style.width = "96%";
+      }
+   }else{
+       sidebars.style.margin = "0px";
+    
+     for (i = 0; i < maincontent.length; i++) {
+        maincontent[i].style.width = "73%";
+      }
+   }
+}
+
     function openCity(evt, cityName) {
       var i, tabcontent, tablinks;
       tabcontent = document.getElementsByClassName("tabcontent");

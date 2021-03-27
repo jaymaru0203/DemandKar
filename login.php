@@ -156,7 +156,7 @@ $er=0;
     }
 
     .fit-image{
-    width: 99%;
+    width: 95%;
     object-fit: cover;
     height: auto; /* only if you want fixed height */
     }
