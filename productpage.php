@@ -1,3 +1,7 @@
+<?php
+require('config.php');
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,7 +59,7 @@
 
             <div class="navbar-nav ml-auto">
                 <a href="index.html" class="nav-item nav-link">Hire Mechanic</a>
-                <a href="productpage.html" class="nav-item nav-link active">Buy Product</a>
+                <a href="productpage.php" class="nav-item nav-link active">Buy Product</a>
              <div class="dropdown show">
               <a class="nav-item nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="images/user.png" width="25px">
@@ -87,33 +91,51 @@
                                 Filter
                               </button>
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Car</a>
-                                <a class="dropdown-item" href="#">Bike</a>
-                                <a class="dropdown-item" href="#">Truck</a>
-                                  <a class="dropdown-item" href="#">Other</a>
+                                <a class="dropdown-item" href="productpage.php?vehicle=Car">Car</a>
+                                <a class="dropdown-item" href="productpage.php?vehicle=Bike">Bike</a>
+                                <a class="dropdown-item" href="productpage.php?vehicle=Truck">Truck</a>
+                                  <a class="dropdown-item" href="productpage.php?vehicle=Others/NA">Other</a>
                               </div>
                             </div>
                         </div>
                         <div class="row  product-page-display" >
                                 <!-- Single Product Item Start -->
+                                <?php
                                 
+                                if(isset($_GET['vehicle'])){
+                                  $vehicle = $_GET['vehicle'];
+                                  $sql = "SELECT * FROM product WHERE productVehicle='$vehicle'";
+                                }
+                                else{
+                                  $sql = "SELECT * FROM product";
+                                }
+                                $result = $conn->query($sql);
+                                if($result->num_rows>0){
+                                  while($row=$result->fetch_assoc()){
+                                
+                                ?>
                               <div class="card">
                                   <div class="fix-image">
-                                  <img src="https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/89754281/original/7d7519d81579bac6036a721b57ab20bd90a00953/any-complex-mechanical-parts-design.jpg" class="card-img-top" alt="...">
+                                  <img src="uploads/<?php echo $row['productImage']; ?>" class="card-img-top" alt="...">
                                  </div> 
                                   <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <h6 class="card-type">Car</h6>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <h5 class="card-title"><?php echo $row['productName']; ?></h5>
+                                    <h6 class="card-type"><?php echo $row['productVehicle']; ?></h6>
+                                    <p class="card-text"><?php echo $row['productDescription'] ?></p>
                            
-                                    <div class="card-price float-left">Rs. 2000</a>
+                                    <div class="card-price float-left">Rs. <?php echo $row['productPrice']; ?></a>
                                     </div>
 
                                     <div class="modal-btn">
-                                    <a href="#" class="btn buy-btn" data-toggle="modal" data-target="#exampleModalCenter">Buy Now</a>
+                                    <a href="#<?php echo $row['id']; ?>" class="btn buy-btn" data-toggle="modal" data-target="#<?php echo $row['id']; ?>">Buy Now</a>
                                     </div>
                                   </div>
                                </div>
+                               <?php
+                               }}
+                                else{
+                                  echo "<h3><br><br><center>No Products Nearby</center></h3>";
+                                }?>
                                      
                          </div>
 
@@ -125,22 +147,27 @@
 
     </div>
 
-
-
+<?php
+    $sql = "SELECT * FROM product";
+                                
+      $result = $conn->query($sql);
+      if($result->num_rows>0){
+        while($row=$result->fetch_assoc()){
+          ?>
 <!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="class-title">Prdouct title</h5>
+        <h5 class="modal-title" id="class-title"><?php echo $row['productName']; ?></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <h6 class="card-type">Car</h6>
-        Some quick example text to build on the card title and make up the bulk of the card's content.
-        <div class="card-price">Rs. 20000</div>
+        <h6 class="card-type"><?php echo $row['productVehicle']; ?></h6>
+        <?php echo $row['productDescription']; ?>
+        <div class="card-price">Rs. <?php echo $row['productPrice']; ?></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -149,6 +176,7 @@
     </div>
   </div>
 </div>
+<?php }} ?>
 
 
 </div>

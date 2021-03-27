@@ -57,7 +57,7 @@
 
             <div class="navbar-nav ml-auto">
                 <a href="index.html" class="nav-item nav-link active">Hire Mechanic</a>
-                <a href="#" class="nav-item nav-link">Buy Product</a>
+                <a href="productpage.php" class="nav-item nav-link">Buy Product</a>
              <div class="dropdown show">
               <a class="nav-item nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="images/user.png" width="25px">
@@ -107,7 +107,7 @@
       <div class="sub-text">Find best product near by service center. Choose your product and get in best prices. </div>
       <div class="link-button">
         
-          <button class="hire-mech">Buy Product</button>
+        <a href="productpage.php"><button class="hire-mech">Product</button></a>
           
         </div>
        </div>

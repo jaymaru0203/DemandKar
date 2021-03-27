@@ -153,6 +153,10 @@ input:focus{
   background-color: #2b2b2b;
   color: white;
 }
+
+.filter button:hover, .filter button:active{
+  color: white !important;
+}
 /*
 Product main*/
 .fix-image {
