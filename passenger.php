@@ -150,7 +150,7 @@ if(isset($_POST['getlatlong1'])){
     </div>
 
     <nav class="navbar navbar-expand-md fixed-top main-nav">
-        <span href="#" class="navbar-brand"><img src="images/logo.png" width="100px;"></span>
+        <span href="passenger.php" class="navbar-brand"><img src="images/logo.png" width="100px;"></span>
 
         <button type="button" id="ChangeToggle" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
             <div id="navbar-hamburger"><i class="fa fa-bars"></i></div>
@@ -171,7 +171,7 @@ if(isset($_POST['getlatlong1'])){
 
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" href="profilepage.php">My Profile</a>
-                <a class="dropdown-item" href="#">Order History</a>
+                <a class="dropdown-item" href="orderhistory.php">Order History</a>
                 <a class="dropdown-item" href="login.php">Logout</a>
               </div>
             </div>      

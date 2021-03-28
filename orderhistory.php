@@ -65,7 +65,7 @@ $sql = "SELECT * FROM passenger WHERE email='$email'";
     </div>
 
     <nav class="navbar navbar-expand-md fixed-top main-nav">
-        <span href="#" class="navbar-brand"><img src="images/logo.png" width="100px;"></span>
+        <span href="passenger.php" class="navbar-brand"><img src="images/logo.png" width="100px;"></span>
 
         <button type="button" id="ChangeToggle" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
             <div id="navbar-hamburger"><i class="fa fa-bars"></i></div>
@@ -77,8 +77,8 @@ $sql = "SELECT * FROM passenger WHERE email='$email'";
         <div class="collapse navbar-collapse" id="navbarCollapse">
 
             <div class="navbar-nav ml-auto">
-                <a href="servicepage.php" class="nav-item nav-link">Hire Mechanic</a>
-                <a href="productpage.php" class="nav-item nav-link active">Buy Product</a>
+                <a href="servicepage.php" class="nav-item nav-link active">Hire Mechanic</a>
+                <a href="productpage.php" class="nav-item nav-link">Buy Product</a>
              <div class="dropdown show">
               <a class="nav-item nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="images/user.png" width="25px">

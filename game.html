@@ -29,13 +29,14 @@
     <link rel="stylesheet" href="css/easyzoom.css">
 
 
-    <title>Home Page</title>
+    <title>GAME</title>
 <style type="text/css">
     canvas {
     border:1px solid #d3d3d3;
     background-color: #f1f1f1;
     position: absolute;
-    top:100px;
+    top: 20vh;
+    left: 10vw;
 }
 
 @media (max-width: 500px) {
@@ -60,7 +61,7 @@
     </div>
 
     <nav class="navbar navbar-expand-md fixed-top main-nav">
-        <span href="#" class="navbar-brand"><img src="images/logo.png" width="100px;"></span>
+        <span href="passenger.php" class="navbar-brand"><img src="images/logo.png" width="100px;"></span>
 
         <button type="button" id="ChangeToggle" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
             <div id="navbar-hamburger"><i class="fa fa-bars"></i></div>
@@ -72,17 +73,17 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
 
             <div class="navbar-nav ml-auto">
-                <a href="index.html" class="nav-item nav-link active">Hire Mechanic</a>
-                <a href="#" class="nav-item nav-link">Buy Product</a>
+                <a href="servicepage.php" class="nav-item nav-link active">Hire Mechanic</a>
+                <a href="productpage.php" class="nav-item nav-link">Buy Product</a>
              <div class="dropdown show">
               <a class="nav-item nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="images/user.png" width="25px">
               </a>
 
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="#">My Profile</a>
-                <a class="dropdown-item" href="#">Order History</a>
-                <a class="dropdown-item" href="#">Logout</a>
+                <a class="dropdown-item" href="profilepage.php">My Profile</a>
+                <a class="dropdown-item" href="orderhistory.php">Order History</a>
+                <a class="dropdown-item" href="login.php">Logout</a>
               </div>
             </div>      
             </div>
@@ -93,12 +94,13 @@
         <div class="container-fluid">
           <div class="row m-0">
             <br>
-                <button onmousedown="accelerate(-0.2)" onmouseup="accelerate(0.05)">ACCELERATE</button>
-                <p>Use the ACCELERATE button to stay in the air</p>
-                <p>How long can you stay alive?</p>
-             
+            <p>Use the ACCELERATE button to stay in the air. </p>
+            <p>How long can you stay alive?</p><br><br>
+            
           </div>
         </div>
+
+        <button onmousedown="accelerate(-0.2)" onmouseup="accelerate(0.05)">ACCELERATE</button> 
 
 
 </div>
