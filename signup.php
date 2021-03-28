@@ -61,14 +61,14 @@ $er=0;
           header('Location: passenger.php');
         }
         else{
-          echo "<h2 style='text-align: center; color: red;'>Could Not Add Customer. Please Try Again</h2>";
+          echo "<h2 style='text-align: center; color: red;'>Could Not Add Passenger. Please Try Again</h2>";
         }
       }
       else{
         $sql = "INSERT INTO serviceCenter (name, email, mobile, pass) VALUES ('$name', '$email', '$mobile', '$pass')";
         if($conn->query($sql)==TRUE){
           $_SESSION['email'] = $email;
-          header('Location: serviceCenter.php');
+          header('Location: address.php');
         }
         else{
           echo "<h2 style='text-align: center; color: red;'>Could Not Add Service Center. Please Try Again</h2>";

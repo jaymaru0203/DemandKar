@@ -20,6 +20,43 @@ if(isset($_GET['id'])){
       $mobile = $row['mobile'];
     }
   }
+$serviceList = "";
+$total = 0;
+$userEmail = $_SESSION['email'];
+  if(isset($_POST['hire'])){
+    $service = $_POST['service'];
+    $t = count($service);
+    // for($i=0; $i<$t; $i++){
+    //     echo "<br>$service[$i]";
+    // }
+    $sql = 'SELECT * FROM services WHERE id IN (' . implode(',', $service) . ')';
+    $result = $conn->query($sql);
+    if($result->num_rows > 0){
+        while($row=$result->fetch_assoc()){
+            $serviceList .= $row['serviceName'].", ";
+            $total = $total + $row['servicePrice'];
+        }
+        $trans = "INSERT INTO transaction (pemail, scemail, services, price, status, arrtime) VALUES ('$userEmail', '$email', '$serviceList', '$total', 'pending', '0')";
+        if($conn->query($trans)===TRUE){
+          $subject = "New Service Request";
+          $body = "Hello $name! A passenger has requested for some of your services. Kindly head to DemandKar to Accept or Reject the Same.";
+          $headers = "From: marujay0203@gmail.com";
+          if(mail($email, $subject, $body, $header)){
+            header('Location: orderhistory.php');
+          }
+          else{
+            echo "Could Not Book Services";
+          }
+        }
+        else{
+          echo "Could Not Book Services";
+        }
+
+    }
+    else{
+      echo "Please Select Atleast One Service";
+    }
+  }
 
 ?>
 
@@ -87,8 +124,8 @@ if(isset($_GET['id'])){
               </a>
 
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="#">My Profile</a>
-                <a class="dropdown-item" href="#">Order History</a>
+                <a class="dropdown-item" href="profilepage.php">My Profile</a>
+                <a class="dropdown-item" href="orderhistory.php">Order History</a>
                 <a class="dropdown-item" href="login.php">Logout</a>
               </div>
             </div>      
@@ -126,7 +163,16 @@ if(isset($_GET['id'])){
                                    <div class="service-title">No. of Services: <span><?php echo $Srow['noServices']; ?></span></div>
                                    <?php }} ?>
 
-                                     <div class="service-title ">Location: <span>2 km</span></div>
+                                   <?php 
+                                      $add = "SELECT * FROM position WHERE email='$email'";
+                                      $res = $conn->query($add);
+                                      if($res->num_rows>0){
+                                        while($r = $res->fetch_assoc()){
+                                          $address = $r['address'];
+                                        }
+                                      }
+                                    ?>
+                                     <div class="service-title ">Location: <span><?php echo $address; ?></span></div>
                                  </div>
                                   <div class="row m-0 justify-content-between">
                           
@@ -152,7 +198,7 @@ if(isset($_GET['id'])){
                                     <th scope="col" class="w-25">Select Your Service</th>
                                   </tr>
                                 </thead>
-                              <form action="paymentpage.php" method="POST">
+                              <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                                 <tbody>
                                 <?php 
                                   $sql = "SELECT * FROM services WHERE email='$email'";

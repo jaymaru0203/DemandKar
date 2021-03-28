@@ -1,3 +1,26 @@
+<?php
+
+require('config.php');
+if(!isset($_SESSION['email'])){
+  header('Location: login.php');
+  exit;
+}
+
+$email = $_SESSION['email'];
+$sql = "SELECT * FROM passenger WHERE email='$email'";
+  $result = $conn->query($sql);
+  if($result->num_rows == 1){
+    while($row=$result->fetch_assoc()){
+      $name = $row['name'];
+      $email = $row['email'];
+      $mobile = $row['mobile'];
+    }
+  }
+
+?>
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,17 +77,17 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
 
             <div class="navbar-nav ml-auto">
-                <a href="index.html" class="nav-item nav-link">Hire Mechanic</a>
-                <a href="productpage.html" class="nav-item nav-link active">Buy Product</a>
+                <a href="servicepage.php" class="nav-item nav-link">Hire Mechanic</a>
+                <a href="productpage.php" class="nav-item nav-link active">Buy Product</a>
              <div class="dropdown show">
               <a class="nav-item nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="images/user.png" width="25px">
               </a>
 
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="#">My Profile</a>
-                <a class="dropdown-item" href="#">Order History</a>
-                <a class="dropdown-item" href="#">Logout</a>
+                <a class="dropdown-item" href="profilepage.php">My Profile</a>
+                <a class="dropdown-item" href="orderhistory.php">Order History</a>
+                <a class="dropdown-item" href="login.php">Logout</a>
               </div>
             </div>      
             </div>
@@ -76,32 +99,56 @@
     <div class="container-fluid product-main-display">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 p-3">
-               <h3 class="text-center">Order History</h3>
+               <h3 class="text-center">Order History</h3><br><br>
                         <div class="row m-0 product-page-display justify-content-center" >
                                 <!-- Single Product Item Start -->
+                               <?php 
                                
+                               $sql = "SELECT * FROM transaction WHERE pemail='$email' ORDER BY status DESC";
+                               $result = $conn->query($sql);
+                               if($result->num_rows>0){
+                                 while($row=$result->fetch_assoc()){
+
+                               ?>
                               <div class="card">
                                   <div class="card-body">
-                                    <h5 class="card-title">Name: <span>Ramesh Mech</span></h5>
-                                    <h5 class="card-title">Email: <span>maru.jn@somaiya.edu</span></h5>
-                                    <h5 class="card-title">Mobile No.: <span>9594233997</span></h6>
-                                    <h6 class="card-title">Service Chosen: <li>Tire Puncture</li></h6>
-                           
-                                   <div class="d-flex justify-content-between">
-                                    <div class="card-price">Rs. 2000</div>
-                                    <div class="status">Pending</div>
-                                  </div>
+                                    <?php
+                                    $scEmail = $row['scemail'];
+                                    $sql2 = "SELECT * FROM serviceCenter WHERE email='$scEmail'";
+                                    $result2 = $conn->query($sql2);
+                                    if($result2->num_rows>0){
+                                      while($row2 = $result2->fetch_assoc()){
+                                    ?>
+                                    <h4 class="text-align-center card-title"> Service Provider Details</h4><br>
+                                    <h5 class="card-title">Name: <span><?php $name2 = $row2['name']; echo $name2; ?></span></h5><br>
+                                    <h5 class="card-title">Email: <span><?php $email2 = $row2['email']; echo $email2; ?></span></h5><br>
+                                    <h5 class="card-title">Mobile No.: <span><?php $mobile2 = $row2['mobile']; echo $mobile2; }} ?></span></h5>
+                                    <h5 class="card-title">Services Chosen: <span><br>
+                                    <?php $ser = explode(",",$row['services']); 
+                                      foreach($ser as $s){
+                                          if($s!=" "){
+                                    ?>  
                                     
+                                    <h6><li><?php echo $s; ?></li></h6>
+                                        <?php }} ?></span><br>
+                                   <div class="d-flex justify-content-between">
+                                    <div class="card-price">Rs. <?php echo $row['price']; $price = $row['price']; ?></div>
+                                    <div class="status"><?php $status = strtoupper($row['status']);
+                                    echo $status; ?></div>
+                                  </div>
+                                    <?php if($status=="ACCEPTED"){ ?>
                                     <div class="d-flex justify-content-between mt-2">
-                                    <div class="card-title">Arrival Time: <span>5 min</span></div>
+                                    <div class="card-title">Arrival Time: <span><?php echo $row['arrtime']." Min"; $arrtime = $row['arrtime']; ?></span></div>
 
                                     <div>
                                     <a href="#" class="btn buy-btn" data-toggle="modal" data-target="#exampleModalCenter">View Receipt</a>
                                     </div>
                                   </div>
+                                  <?php } ?>
 
                                   </div>
                                </div>
+                               <?php }} ?>
                                      
                          </div>
 
@@ -119,7 +166,7 @@
   <div class="modal-dialog modal-dialog-full-width modal-dialog-centered" role="document">
     <div class="modal-content modal-content-full-width ">
       <div class="modal-header modal-header-full-width text-center">
-        <h5 class="modal-title" id="class-title ">Prdouct title</h5>
+        <h5 class="modal-title" id="class-title ">RECEIPT</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -131,27 +178,35 @@
         <div class="heading text-center">Passenger</div>
           <div class="row justify-content-center">
         
-                 <div class="modal-box">
-                                  <div class="service-title">Passenger Name: <span>Mahesh Mechanic</span></div>
-                                  <div class="service-title">Contact Info: <span>9986265435</span></div>
-                                  <div class="service-title ">Email: <span>maru.jn@somaiya.edu</span></div> 
-                                  <div class="service-title ">Location: <span>2 km</span></div>
-                                  <div class="service-title">Services Applied: <span>6</span></div>
-                                  <div class="service-title">Price: <span>6</span></div>
-                      
+            <div class="modal-box">
+              <div class="service-title">Passenger Name: <span><?php echo $name; ?></span></div>
+              <div class="service-title">Contact Info: <span><?php echo $mobile; ?></span></div>
+              <div class="service-title ">Email: <span><?php echo $email; ?></span></div> 
+              <!-- <div class="service-title ">Location: <span>2 km</span></div> -->
+              <div class="service-title">Services Applied: <span>
+                <?php  
+                    foreach($ser as $s){
+                        if($s!=" "){
+                  ?>  
+                                    
+                  <h6><li><?php echo $s; ?></li></h6>
+                  <?php }} ?></span>
+              </div>
+              <div class="service-title">Price: Rs. <?php echo $price; ?><span></span></div>
           </div>
+
           </div>
         </div>
         <div class="col-lg-6 col-md-6">
           <div class="heading text-center">Service Provider</div>
           <div class="row justify-content-center">
             
-                         <div class="modal-box">
-                                  <div class="service-title ">Service Provider Name: <span>Mahesh Mechanic</span></div>
-                                  <div class="service-title">Contact Info: <span>9986265435</span></div>
-                                  <div class="service-title ">Email: <span>maru.jn@somaiya.edu</span></div> 
-                                  <div class="service-title ">Location: <span>2 km</span></div>
-                                  <div class="service-title">Arrivial time: <span>6</span></div>
+            <div class="modal-box">
+            <div class="service-title ">Service Provider Name: <span><?php echo $name2; ?></span></div>
+            <div class="service-title">Contact Info: <span><?php echo $mobile2; ?></span></div>
+            <div class="service-title ">Email: <span><?php echo $email2; ?></span></div> 
+            <!-- <div class="service-title ">Location: <span>2 km</span></div> -->
+            <div class="service-title">Arrivial time: <span><?php echo $arrtime." Minutes"; ?></span></div>
                       
           </div>
         </div>
@@ -159,8 +214,8 @@
         </div>
       </div>
       <div class="modal-footer modal-footer-full-width ">
-        <button type="button" class="btn btn-secondary">Print</button>
-        <button type="button" class="btn buy-btn">Checkout</button>
+        <button type="button" class="btn btn-secondary" onclick="window.print()">Print</button>
+        <a href="paymentpage.php?price=<?php echo $row['price']; ?>"><button type="button" class="btn buy-btn">Checkout</button></a>
       </div>
     </div>
   </div>
