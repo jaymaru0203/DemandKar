@@ -37,7 +37,14 @@ $er=0;
         while($row = $result_email2->fetch_assoc()) {
           if($pass == $row['pass']){
             $_SESSION['email'] = $email;
-            header('Location: serviceCenter.php');
+            $check = "SELECT * FROM position WHERE email='$email'";
+            $result = $conn->query($check);
+            if($result->num_rows>0){
+              header('Location: serviceCenter.php');
+            }
+            else{
+              header('Location: address.php');
+            }
           }
           else{
             $error['pass'] = "Incorrect Password";

@@ -1,7 +1,61 @@
+<?php
+
+require('config.php');
+if(!isset($_SESSION['email'])){
+  header('Location: login.php');
+  exit;
+}
+$email = $_SESSION['email'];
+if(isset($_POST['addAddress'])){
+  $address = $_POST['address'];
+
+  $searchTerm = $address;
+
+$buildQuery = http_build_query([
+  'access_key' => 'f3cf897892df57307c368f33bcb17d82',
+  'query' => $searchTerm
+]);
+
+$ch = curl_init(sprintf('%s?%s', 'http://api.positionstack.com/v1/forward', $buildQuery));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$responseData = curl_exec($ch);
+curl_close($ch);
+
+$resultData = json_decode($responseData, true);
+
+$latitude = $resultData["data"]["0"]["latitude"];
+$longitude = $resultData["data"]["0"]["longitude"];
+
+$sql = "SELECT * FROM position WHERE email='$email'";
+    $result = $conn->query($sql);
+    if($result->num_rows==0){
+      $sql1 = "INSERT INTO position (email, latitude, longitude , address) VALUES('$email', '$latitude', '$longitude', '$address')";
+      if($conn->query($sql1) === TRUE){
+        header('Location: serviceCenter.php');
+      }
+      else{
+        echo "Could Not Update Location";
+      }      
+    }
+    else{
+      $sql1 = "UPDATE position SET latitude='$latitude', longitude='$longitude', address='$address' WHERE email='$email'";
+      if($conn->query($sql1) === TRUE){
+        header('Location: serviceCenter.php');
+      }
+      else{
+        echo "Could Not Update Address";
+      } 
+    }
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Address</title>
     <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -108,7 +162,7 @@ input[type=radio] {
 }
 
 .fit-image{
-width: 100%;
+width: 95%;
 object-fit: cover;
 height: auto; /* only if you want fixed height */
 }
@@ -170,18 +224,18 @@ button:focus {outline:0 !important;}
         <div class="col-lg-6  align-self-center p-0" >
          <!--  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#a25d4a" fill-opacity="0.8" d="M0,256L60,213.3C120,171,240,85,360,58.7C480,32,600,64,720,112C840,160,960,224,1080,218.7C1200,213,1320,139,1380,101.3L1440,64L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path></svg> -->
           <div class="row m-0 justify-content-center">
-            <form data-aos="zoom-in">
+            <form data-aos="zoom-in" method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
              <div class="row justify-content-center logo">
               <img src="images/logo.png" width="300px">
               </div>
               <h6 class="statement"><i>Add Address of Your Location<br>So passengers can locate you!</i></h6>
               <div class="form-group">
                <!--  <label for="exampleFormControlTextarea1">Address</label> -->
-                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Type Your Address here..." rows="4"></textarea>
+                <textarea class="form-control" id="exampleFormControlTextarea1" name="address" placeholder="Type Your Address here..." rows="4" required></textarea>
               </div>
 
               <div class=" form-group d-flex justify-content-center" id="btn">
-               <button type="submit" formaction="serviceCenter.php" class="btn btn-block">Add Address</button>
+               <button type="submit" name="addAddress" class="btn btn-block">Add Address</button>
               </div>
             </form>
           </div>

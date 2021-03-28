@@ -93,6 +93,30 @@ $target_dir = "uploads/";
   }
 }
 
+if(isset($_POST['accept'])){
+  $arrtime = $_POST['arrtime'];
+  $id = $_POST['id'];
+  $sql = "UPDATE transaction SET status='ACCEPTED', arrtime='$arrtime' WHERE id='$id'";
+  if($conn->query($sql)===TRUE){
+
+  }
+  else{
+    echo "Status Could Not be Updated!";
+  }
+}
+
+if(isset($_POST['reject'])){
+  $arrtime = $_POST['arrtime'];
+  $id = $_POST['id'];
+  $sql = "UPDATE transaction SET status='REJECTED', arrtime='$arrtime' WHERE id='$id'";
+  if($conn->query($sql)===TRUE){
+
+  }
+  else{
+    echo "Status Could Not be Updated!";
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -185,10 +209,14 @@ $target_dir = "uploads/";
         }
 
         /*Transaction*/
-        
+
+        #boxx{
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
 
         .order-box{
-          width: 320px;
+          width: 500px;
           padding: 18px;
           border-radius: 8px ; 
           margin: 0px 15px;
@@ -218,10 +246,10 @@ $target_dir = "uploads/";
           margin: 0 3px;
         }
         .status-btn {
-    justify-content: space-between;
-    display: flex;
-    margin: 10px 0px 0px;
-}
+            justify-content: space-between;
+            display: flex;
+            margin: 10px 0px 0px;
+        }
 
         .accept{
             border: 0;
@@ -544,11 +572,11 @@ $target_dir = "uploads/";
   </div>
   <div class="cards">Transactions<br>
   <b class="statText">
-  <!-- <?php
-  $sql3 = "SELECT * FROM transaction WHERE email='$email'"; //ADD TRANSACTION TABLE
+  <?php
+  $sql3 = "SELECT * FROM transaction WHERE scemail='$email'";
   $result = $conn->query($sql3); 
   echo $result->num_rows; 
-  ?> -->
+  ?>
   </b>
   </div>
   <div class="cards">Rating<br>
@@ -680,28 +708,71 @@ if ($result->num_rows > 0) {
 </div>
 
 <div id="transactions" class="tabcontent">
-  <h2 class="order-title">Transaction Details</h2>
+  <br><br><h2 class="order-title">Transaction Details</h2><br>
+  <div id="boxx">
+  <?php 
+  $sql = "SELECT * FROM transaction WHERE scemail='$email' ORDER BY status DESC";
+  $result = $conn->query($sql);
+  if($result->num_rows>0){
+    while($row=$result->fetch_assoc()){
+      $email2 = $row['pemail'];
+      $price = $row['price'];
+      $sql2 = "SELECT * FROM passenger WHERE email='$email2'";
+      $result2 = $conn->query($sql2);
+      if($result2->num_rows>0){
+        while($row2=$result2->fetch_assoc()){
+          $name2 = $row2['name'];
+          $mobile2 = $row2['mobile'];
+        }
+      }
+
+   ?>
   <div class="order-box">
-      <h5 class="card-title">Name: <span>Ramesh Mech</span></h5>
-      <h5 class="card-title">Email: <span>maru.jn@somaiya.edu</span></h5>
-      <h5 class="card-title">Mobile No:<span>9594233997</span></h5>
-      <h5 class="card-title">Address: <span>F/15, Yashwant Society, Kisan Nagar 1, Thane.</span></h5>
-      <h5 class="card-title">Distance: <span>2 km</span></h5>
-      <h5 class="card-title">Service Chosen: <li>Tire Puncture</li></h5>
-      <form class="arrival-form">
+      <h5 class="card-title">Name: <span><?php echo $name2; ?></span></h5>
+      <h5 class="card-title">Email: <span><?php echo $email2; ?></span></h5>
+      <h5 class="card-title">Mobile No:<span><?php echo $mobile2; ?></span></h5>
+      <h5 class="card-title">Price:<span><?php echo $price; ?></span></h5>
+      <?php 
+        $add = "SELECT * FROM position WHERE email='$email2'";
+        $res = $conn->query($add);
+        if($res->num_rows>0){
+          while($r = $res->fetch_assoc()){
+            $address = $r['address'];
+          }
+        }
+      ?>
+      <h5 class="card-title">Location: <span><?php echo $address ?></span></h5>
+      <!-- <h5 class="card-title">Distance: <span>2 km</span></h5> -->
+      <h5 class="card-title">Service Chosen: 
+      <span>
+      <?php $ser = explode(",",$row['services']); 
+        foreach($ser as $s){
+            if($s!=" "){
+      ?>  
+      
+      <h6><li><?php echo $s; ?></li></h6>
+          <?php }} ?>
+      </span>
+
+      </h5>
+
+      <?php if(strtoupper($row['status'])=="PENDING"){ ?>
+      <form class="arrival-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
         <div class="arrival">
          <label>Time to Arrive: </label><br> 
-        <input type="text" name="arrivalTime">
+        <input type="number" name="arrtime" placeholder="Arrival Time in Minutes" required>
+        <input type="number" name="id" id="id" value="<?php echo $row['id']; ?>" hidden>
         </div>
-      </form>
-
+      
      <div class="status-btn">
-      <button class="reject">Reject</button>
-      <button class="accept">Accept</button>
-      
+      <button class="reject" type="submit" name="reject" value="reject">Reject</button>
+      <button class="accept" type="submit" name="accept" value="accept">Accept</button>
     </div>
-      
+
+      </form>
+      <?php } else{ echo $row['status']; }?>
     </div>
+      <?php }} ?>
   </div>
 </div>
 

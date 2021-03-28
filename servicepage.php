@@ -4,6 +4,16 @@ if(!isset($_SESSION['email'])){
   header('Location: login.php');
   exit;
 }
+
+$userEmail = $_SESSION['email'];
+$pos = "SELECT * FROM position WHERE email='$userEmail'";
+$res = $conn->query($pos);
+if($res->num_rows>0){
+  while($r=$res->fetch_assoc()){
+    $lat1 = $r['latitude'];
+    $long1 = $r['longitude'];
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -43,11 +53,11 @@ if(!isset($_SESSION['email'])){
 <div id="wrapper">
   
 
-    <div id="pre-loader" class="loader-container">
+    <!-- <div id="pre-loader" class="loader-container">
             <div id="loader">
                <img src="images/loader.gif">
             </div>
-    </div>
+    </div> -->
 
     <nav class="navbar navbar-expand-md fixed-top main-nav">
         <span href="#" class="navbar-brand"><img src="images/logo.png" width="100px;"></span>
@@ -90,7 +100,7 @@ if(!isset($_SESSION['email'])){
                           <button type="submit" name="searchbtn"><i class="fa fa-search"></i></button>
                         </form>
 
-                             <div class="dropdown filter">
+                             <!-- <div class="dropdown filter">
                               <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Sort By
                               </button>
@@ -99,7 +109,7 @@ if(!isset($_SESSION['email'])){
                                 <a class="dropdown-item" href="servicepage.php?sort=location">Nearest Location</a>
                                 <a class="dropdown-item" href="servicepage.php?sort=responseTime">Response Time</a>
                               </div>
-                            </div>
+                            </div> -->
                         </div>
 
                       <?php
@@ -133,7 +143,15 @@ if(!isset($_SESSION['email'])){
                                 <div class="row">
                                  <div class="col-lg-9 col-md-9 col-sm-8 col-xs-6">
                                    <div class="service-title">Service Provider: <span><?php echo $row['name']; ?></span></div>
-                                   <div class="service-title">Response Time: <span>6</span></div>
+                                   <?php 
+                                   $email = $row['email'];
+                                    $resp = "SELECT AVG(arrtime) AS responseTime FROM transaction WHERE scemail='$email'";
+                                    $results = $conn->query($resp);
+                                    if($results->num_rows==1){
+                                      while($r = $results->fetch_assoc()){
+
+                                   ?>
+                                   <div class="service-title">Response Time: <?php echo substr($r['responseTime'],0,1)." - Minutes"; }}?><span></span></div>
                                  </div>
                                  <?php 
                                   $email = $row['email'];
@@ -145,7 +163,27 @@ if(!isset($_SESSION['email'])){
                                  <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
                                    <div class="service-title ">Rating: <span><?php echo substr($Rrow['ratingAverage'], 0,3); ?></span></div>
                                    <?php }} ?>
-                                    <div class="service-title ">Location: <span>2 km</span></div>                                  
+
+                                      <?php
+                                      $scEmail = $row['email'];
+                                      $pos = "SELECT * FROM position WHERE email='$scEmail'";
+                                      $res = $conn->query($pos);
+                                      if($res->num_rows>0){
+                                        while($r=$res->fetch_assoc()){
+                                          $lat2 = $r['latitude'];
+                                          $long2 = $r['longitude'];
+                                        }
+                                      }
+
+                                      // formula to calculate distance between 2 co-ordinates
+                                      $theta = $long2 - $long1;
+                                      $dist=sin(deg2rad($lat2)) * sin(deg2rad($lat1)) + cos(deg2rad($lat2)) * cos(deg2rad($lat1)) * cos(deg2rad($theta));
+                                      $miles = acos($dist);
+                                      $miles = rad2deg($miles);
+                                      $km = $miles*60*1.1515;
+                                      $km = $km*1.609344;
+                                      ?>
+                                    <div class="service-title ">Distance: <span><?php echo $km; ?> km</span></div>                                  
                                  </div>
                                 </div>
                                 <div class="modal-btn">
