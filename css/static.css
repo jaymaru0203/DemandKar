@@ -1,0 +1,201 @@
+
+#wrapper{
+width: 100%;
+overflow: hidden;
+position: relative;
+padding: 0;
+}
+
+*{
+	box-sizing: border-box;
+}
+
+.loader-container {
+    background: #fff;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 9999;
+}
+
+
+.hidden{
+	display: none;
+}
+
+#loader {
+    display: block;
+    position: absolute;
+    font-size: 0;
+    left: 50%;
+    top: 50%;
+    width: 100px;
+    height: 100px;
+    transform: translateY(-50%) translateX(-50%);
+  }
+
+#loader img {
+    display: block;
+    width: 100%;
+    vertical-align: middle;
+}
+
+.main-nav button{
+  position:absolute;
+  right: 0px;
+  top: 0px;
+  border:none;
+  height:40px;
+  outline:none;
+  text-align:center;
+}
+
+.navbar{
+ background-color: #ffffff;
+ padding: 5px!important;
+ min-height: 40px;
+ box-shadow: 0px 1px 20px #ccc;
+ border-radius: 0px!important; 
+ position: relative;
+}
+
+.main-nav a{
+  color: #160d0b;
+  font-size: 18px;
+  font-weight: 500;
+  margin-right: 20px;
+  letter-spacing: 1.2px;
+}
+
+.main-nav a:hover{
+  color: #e75d57;
+  font-size: 18px;
+  font-weight: 500;
+  margin-right: 20px;
+  letter-spacing: 1.2px;
+}
+.navbar-brand {
+    float: left;
+    height: auto!important;
+    padding-top:0px;
+}
+
+.navbar-toggler:focus{
+  border: none;
+  outline: none;
+  align-items: center;
+  
+}
+#navbarCollapse{
+	background-color: white;
+	padding:0px 10px;
+  min-height: 40px;
+}
+
+.dropdown-menu{
+	right: 0!important;
+	left: -100px;
+}
+.dropdown-menu a:active{
+  background:#e75d57;
+  color: #fff;
+}
+
+.image-screen img{
+	margin: auto;    
+    display: block;
+}
+
+.fit-image{
+width: 100%;
+object-fit: cover;
+height: auto; /* only if you want fixed height */
+}
+
+.screen-3{
+	padding: 0px  20px;
+	background-color: #fff;
+}
+
+.screen-1{
+	padding: 50px  20px;
+	background-color: #e75d570d;
+}
+
+.screen-2{
+	padding: 50px  20px;
+	background-color: #fff;
+}
+
+
+
+.main-screen{
+    padding: 0 100px;
+}
+
+
+.main-text{
+	font-size: 2.8rem;
+	font-weight: 700;
+	line-height: normal;
+	margin-bottom: 20px;
+}
+
+
+.sub-text{
+	font-size: 1rem;
+	color: 
+	font-weight: 400;
+	line-height: normal;
+	margin-bottom: 20px;
+	text-align: justify;
+}
+
+.hire-mech{
+	width: 200px;
+	border: none;
+	padding: 12px 8px;
+	margin: 20px 0;
+	border-radius:8px;
+	background-color:  #e75d57;
+	color: #fff;
+	font-size: 1.2rem;
+}
+
+@media (max-width: 500px) {
+	.main-screen{
+    padding: 0 20px;
+}
+
+
+.main-text{
+	font-size: 1.9rem;
+	font-weight: 700;
+	line-height: normal;
+	margin-bottom: 20px;
+}
+
+
+.sub-text{
+	font-size: 1rem;
+	color: 
+	font-weight: 400;
+	line-height: normal;
+	margin-bottom: 20px;
+	text-align: justify;
+}
+
+.hire-mech{
+	width: 200px;
+	border: none;
+	padding: 10px 5px;
+	margin: 20px 0;
+	border-radius:8px;
+	background-color:  #e75d57;
+	color: #fff;
+	font-size: 1.2rem;
+}
+
+}
