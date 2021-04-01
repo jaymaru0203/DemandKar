@@ -215,7 +215,7 @@ $sql = "SELECT * FROM passenger WHERE email='$email'";
       </div>
       <div class="modal-footer modal-footer-full-width ">
         <button type="button" class="btn btn-secondary" onclick="window.print()">Print</button>
-        <a href="paymentpage.php?price=<?php echo $row['price']; ?>"><button type="button" class="btn buy-btn">Checkout</button></a>
+        <a href="paymentpage.php?price=<?php echo $price; ?>"><button type="button" class="btn buy-btn">Checkout</button></a>
       </div>
     </div>
   </div>
